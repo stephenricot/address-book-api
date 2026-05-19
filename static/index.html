@@ -45,22 +45,39 @@
             <div id="addressList" class="results"></div>
         </div>
 
-        <!-- Modal for editing address -->
+        <!-- Modal for full address editing -->
 <div id="editModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
         <h3>Edit Address</h3>
         <form id="editForm">
-            <input type="text" id="editId" hidden>
+            <input type="hidden" id="editId">
+            
+            <label for="editStreet">Street:</label>
             <input type="text" id="editStreet" placeholder="Street" required>
+            
+            <label for="editCity">City:</label>
             <input type="text" id="editCity" placeholder="City" required>
+            
+            <label for="editState">State/Province:</label>
             <input type="text" id="editState" placeholder="State" required>
+            
+            <label for="editZip">ZIP Code:</label>
             <input type="text" id="editZip" placeholder="ZIP Code" required>
+            
+            <label for="editCountry">Country:</label>
             <input type="text" id="editCountry" placeholder="Country" required>
+            
+            <label for="editLat">Latitude (-90 to 90):</label>
             <input type="number" step="any" id="editLat" placeholder="Latitude" required>
+            
+            <label for="editLon">Longitude (-180 to 180):</label>
             <input type="number" step="any" id="editLon" placeholder="Longitude" required>
-            <button type="submit">Save Changes</button>
-            <button type="button" id="cancelEdit">Cancel</button>
+            
+            <div class="modal-buttons">
+                <button type="submit">Save Changes</button>
+                <button type="button" id="cancelEdit">Cancel</button>
+            </div>
         </form>
     </div>
 </div>

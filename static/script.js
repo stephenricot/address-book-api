@@ -13,13 +13,13 @@ async function apiCall(url, options = {}) {
     return null;
 }
 
-// Load all addresses and render
+// Load and render address list
 async function loadAddresses() {
     try {
         const addresses = await apiCall(API_BASE);
         renderAddressList(addresses);
     } catch (err) {
-        showError("addressList", err.message);
+        document.getElementById("addressList").innerHTML = `<p class="error">${err.message}</p>`;
     }
 }
 
@@ -32,7 +32,7 @@ function renderAddressList(addresses) {
     const html = addresses.map(addr => `
         <div class="address-item" data-id="${addr.id}">
             <div class="address-info">
-                <strong>${addr.street}, ${addr.city}, ${addr.state} ${addr.zip_code}, ${addr.country}</strong><br>
+                <strong>${escapeHtml(addr.street)}, ${escapeHtml(addr.city)}, ${escapeHtml(addr.state)} ${escapeHtml(addr.zip_code)}, ${escapeHtml(addr.country)}</strong><br>
                 📍 (${addr.latitude}, ${addr.longitude})<br>
                 🆔 ID: ${addr.id}
             </div>
@@ -43,6 +43,16 @@ function renderAddressList(addresses) {
         </div>
     `).join("");
     container.innerHTML = html;
+}
+
+// Simple escape to prevent XSS
+function escapeHtml(str) {
+    return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
 }
 
 // Create address
@@ -78,16 +88,26 @@ window.deleteAddress = async (id) => {
     }
 };
 
-// Get modal elements
+// ----- Full Edit Modal Functions -----
 const modal = document.getElementById("editModal");
 const closeBtn = document.getElementsByClassName("close")[0];
 const cancelBtn = document.getElementById("cancelEdit");
 
-// Function to open modal with address data
+function openModal() {
+    modal.style.display = "block";
+}
+function closeModal() {
+    modal.style.display = "none";
+}
+if (closeBtn) closeBtn.onclick = closeModal;
+if (cancelBtn) cancelBtn.onclick = closeModal;
+window.onclick = function(event) {
+    if (event.target === modal) closeModal();
+};
+
 window.editAddress = async (id) => {
     try {
         const address = await apiCall(`${API_BASE}/${id}`);
-        // Fill form fields
         document.getElementById("editId").value = address.id;
         document.getElementById("editStreet").value = address.street;
         document.getElementById("editCity").value = address.city;
@@ -96,23 +116,12 @@ window.editAddress = async (id) => {
         document.getElementById("editCountry").value = address.country;
         document.getElementById("editLat").value = address.latitude;
         document.getElementById("editLon").value = address.longitude;
-        modal.style.display = "block";
+        openModal();
     } catch (err) {
         alert("Failed to load address: " + err.message);
     }
 };
 
-// Close modal
-function closeModal() {
-    modal.style.display = "none";
-}
-closeBtn.onclick = closeModal;
-cancelBtn.onclick = closeModal;
-window.onclick = function(event) {
-    if (event.target == modal) closeModal();
-};
-
-// Handle edit form submission
 document.getElementById("editForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const id = document.getElementById("editId").value;
@@ -132,13 +141,13 @@ document.getElementById("editForm").addEventListener("submit", async (e) => {
         });
         alert("Address updated successfully!");
         closeModal();
-        loadAddresses();  // refresh list
+        loadAddresses();
     } catch (err) {
         alert("Update failed: " + err.message);
     }
 });
 
-// Nearby search
+// Nearby search (fixed)
 document.getElementById("nearbyForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const lat = parseFloat(document.getElementById("centerLat").value);
@@ -154,7 +163,7 @@ document.getElementById("nearbyForm").addEventListener("submit", async (e) => {
             container.innerHTML = "<p>No addresses within that distance.</p>";
         } else {
             container.innerHTML = nearby.map(addr => 
-                `<div>📌 ${addr.street}, ${addr.city} – ${addr.latitude},${addr.longitude} (ID ${addr.id})</div>`
+                `<div>📌 ${escapeHtml(addr.street)}, ${escapeHtml(addr.city)} – (${addr.latitude}, ${addr.longitude}) [ID ${addr.id}]</div>`
             ).join("");
         }
     } catch (err) {
@@ -162,12 +171,12 @@ document.getElementById("nearbyForm").addEventListener("submit", async (e) => {
     }
 });
 
-// Clear nearby search inputs and results
+// Clear nearby search
 document.getElementById("clearNearbyBtn").addEventListener("click", () => {
     document.getElementById("centerLat").value = "";
     document.getElementById("centerLon").value = "";
     document.getElementById("radius").value = "";
-    document.getElementById("nearbyResults").innerHTML = ""; // clear previous results
+    document.getElementById("nearbyResults").innerHTML = "";
 });
 
 // Refresh button
