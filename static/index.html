@@ -44,7 +44,26 @@
             <button id="refreshBtn">⟳ Refresh</button>
             <div id="addressList" class="results"></div>
         </div>
+
+        <!-- Modal for editing address -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Edit Address</h3>
+        <form id="editForm">
+            <input type="text" id="editId" hidden>
+            <input type="text" id="editStreet" placeholder="Street" required>
+            <input type="text" id="editCity" placeholder="City" required>
+            <input type="text" id="editState" placeholder="State" required>
+            <input type="text" id="editZip" placeholder="ZIP Code" required>
+            <input type="text" id="editCountry" placeholder="Country" required>
+            <input type="number" step="any" id="editLat" placeholder="Latitude" required>
+            <input type="number" step="any" id="editLon" placeholder="Longitude" required>
+            <button type="submit">Save Changes</button>
+            <button type="button" id="cancelEdit">Cancel</button>
+        </form>
     </div>
+</div>
 
     <script src="/static/script.js"></script>
 </body>
