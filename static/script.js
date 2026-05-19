@@ -119,6 +119,14 @@ document.getElementById("nearbyForm").addEventListener("submit", async (e) => {
     }
 });
 
+// Clear nearby search inputs and results
+document.getElementById("clearNearbyBtn").addEventListener("click", () => {
+    document.getElementById("centerLat").value = "";
+    document.getElementById("centerLon").value = "";
+    document.getElementById("radius").value = "";
+    document.getElementById("nearbyResults").innerHTML = ""; // clear previous results
+});
+
 // Refresh button
 document.getElementById("refreshBtn").addEventListener("click", loadAddresses);
 
