@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Address Book</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>📒 Address Book</h1>
+
+        <!-- Create Address Form -->
+        <div class="card">
+            <h2>➕ Add New Address</h2>
+            <form id="createForm">
+                <input type="text" id="street" placeholder="Street" required>
+                <input type="text" id="city" placeholder="City" required>
+                <input type="text" id="state" placeholder="State" required>
+                <input type="text" id="zip" placeholder="ZIP Code" required>
+                <input type="text" id="country" placeholder="Country" required>
+                <input type="number" step="any" id="lat" placeholder="Latitude (-90..90)" required>
+                <input type="number" step="any" id="lon" placeholder="Longitude (-180..180)" required>
+                <button type="submit">Create Address</button>
+            </form>
+        </div>
+
+        <!-- Nearby Search -->
+        <div class="card">
+            <h2>🔍 Find Nearby (km)</h2>
+            <form id="nearbyForm">
+                <input type="number" step="any" id="centerLat" placeholder="Center Latitude" required>
+                <input type="number" step="any" id="centerLon" placeholder="Center Longitude" required>
+                <input type="number" step="any" id="radius" placeholder="Radius (km)" required>
+                <button type="submit">Search</button>
+            </form>
+            <div id="nearbyResults" class="results"></div>
+        </div>
+
+        <!-- All Addresses + Update/Delete -->
+        <div class="card">
+            <h2>📋 All Addresses</h2>
+            <button id="refreshBtn">⟳ Refresh</button>
+            <div id="addressList" class="results"></div>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
